@@ -1,54 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Tamanho da p·gina em bytes
-#define PAGE_SIZE 256 // 256 bytes
+// Tamanho da p√°gina em bytes
+#define TAMANHO_PAGINA 256 
 
-// FunÁ„o para calcular o n˙mero da p·gina e o deslocamento
-void translateAddress(unsigned int virtualAddress, unsigned int pageSize) {
-    unsigned int pageNumber = virtualAddress / pageSize;
-    unsigned int offset = virtualAddress % pageSize;
+// Fun√ß√£o para calcular o n√∫mero da p√°gina e o deslocamento
+void traduzirEndereco(unsigned int enderecoVirtual, unsigned int tamanhoPagina) {
+    unsigned int numeroPagina = enderecoVirtual / tamanhoPagina;
+    unsigned int deslocamento = enderecoVirtual % tamanhoPagina;
 
-    printf("/nO endereco %u contem:\n", virtualAddress);
-    printf("Numero da pagina = %u\n", pageNumber);
-    printf("Deslocamento = %u\n", offset);
+    printf("\nO endereco %u contem:\n", enderecoVirtual);
+    printf("Numero da pagina = %u\n", numeroPagina);
+    printf("Deslocamento = %u\n", deslocamento);
 
-    // Abra o arquivo "data_memory.txt" para leitura
-    FILE *dataMemoryFile = fopen("C:/Users/jeyso/OneDrive/¡rea de Trabalho/Trabalho viel/data_memory.txt", "r");
-    if (dataMemoryFile == NULL) {
+    // Abertura do arquivo "data_memory.txt" para leitura
+    FILE *arquivoMemoriaDados = fopen("C:/Users/jeyso/OneDrive/√Årea de Trabalho/Trabalho viel/data_memory.txt", "r");
+    if (arquivoMemoriaDados == NULL) {
         perror("Erro ao abrir data_memory.txt");
         exit(1);
     }
 
-    // Desloque o ponteiro de arquivo para a posiÁ„o correta
-    fseek(dataMemoryFile, pageNumber * pageSize, SEEK_SET);
+    // Deslocamento do ponteiro de arquivo para a posi√ß√£o correta
+    fseek(arquivoMemoriaDados, numeroPagina * tamanhoPagina, SEEK_SET);
 
-    // Leia o valor da posiÁ„o correta
-    unsigned int value;
-    fscanf(dataMemoryFile, "%u", &value);
+    // Leitura do valor da posi√ß√£o correta
+    unsigned int valor;
+    fscanf(arquivoMemoriaDados, "%u", &valor);
 
-    printf("Valor lido = %u\n", value);
+    printf("Valor lido = %u\n", valor);
 
-    // Feche o arquivo "data_memory.txt"
-    fclose(dataMemoryFile);
+    // Fechamento do arquivo "data_memory.txt"
+    fclose(arquivoMemoriaDados);
 }
 
 int main() {
-    // Abra o arquivo "addresses_16b.txt" para leitura
-    FILE *addressesFile = fopen("C:/Users/jeyso/OneDrive/¡rea de Trabalho/Trabalho viel/addresses_16b.txt", "r");
-    if (addressesFile == NULL) {
+    
+    // Abertura do arquivo "addresses_16b.txt" para leitura
+    FILE *arquivoEnderecos = fopen("C:/Users/jeyso/OneDrive/√Årea de Trabalho/Trabalho viel/addresses_16b.txt", "r");
+    if (arquivoEnderecos == NULL) {
         perror("Erro ao abrir addresses_16b.txt");
         return 1;
     }
 
-    unsigned int virtualAddress;
+    unsigned int enderecoVirtual;
 
-    while (fscanf(addressesFile, "%u", &virtualAddress) != EOF) {
-        translateAddress(virtualAddress, PAGE_SIZE);
+    while (fscanf(arquivoEnderecos, "%u", &enderecoVirtual) != EOF) {
+        traduzirEndereco(enderecoVirtual, TAMANHO_PAGINA);
     }
 
-    // Feche o arquivo "addresses_16b.txt"
-    fclose(addressesFile);
+    // Fechamento do arquivo "addresses_16b.txt"
+    fclose(arquivoEnderecos);
 
     return 0;
 }
